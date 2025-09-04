@@ -6,6 +6,7 @@ import 'package:habit_it/features/focus/presentation/focus_screen.dart';
 import 'package:habit_it/features/stats/presentation/stats_screen.dart';
 import 'package:habit_it/features/settings/presentation/settings_screen.dart';
 import 'package:habit_it/features/habits/presentation/add_habit_screen.dart';
+import 'package:habit_it/features/billing/presentation/paywall_screen.dart';
 import 'package:habit_it/features/shared/presentation/main_shell.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -36,6 +37,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/add-habit',
         builder: (context, state) => const AddHabitScreen(),
+      ),
+      GoRoute(
+        path: '/paywall',
+        builder: (context, state) => const PaywallScreen(),
       ),
     ],
   );

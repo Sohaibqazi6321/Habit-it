@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_it/domain/models/habit.dart';
 import 'package:habit_it/data/repositories/habit_repository.dart';
+import 'package:habit_it/features/billing/providers/billing_provider.dart';
 
 // Stream provider for habits
 final habitsProvider = StreamProvider<List<Habit>>((ref) {
@@ -17,7 +18,8 @@ final habitCountProvider = FutureProvider<int>((ref) {
 // Provider to check if user can add more habits
 final canAddHabitProvider = FutureProvider<bool>((ref) {
   final repository = ref.watch(habitRepositoryProvider);
-  return repository.canAddHabit(isPro: false); // TODO: Get pro status from user service
+  final isPro = ref.watch(isProUserProvider);
+  return repository.canAddHabit(isPro: isPro);
 });
 
 // Provider for habit completion status

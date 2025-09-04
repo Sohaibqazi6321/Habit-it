@@ -327,12 +327,7 @@ class _UpgradePrompt extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () {
-                // TODO: Navigate to paywall
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Paywall coming in Phase 3!')),
-                );
-              },
+              onPressed: () => context.push('/paywall'),
               child: const Text('Upgrade Now'),
             ),
             const SizedBox(height: 8),

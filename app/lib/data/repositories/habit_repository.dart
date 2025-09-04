@@ -16,7 +16,7 @@ class HabitRepository {
   // Get all habits (non-archived)
   Future<List<Habit>> getHabits() async {
     return await _isar.habits
-        .where()
+        .filter()
         .archivedEqualTo(false)
         .sortByCreatedAt()
         .findAll();
@@ -25,7 +25,7 @@ class HabitRepository {
   // Stream of habits for real-time updates
   Stream<List<Habit>> watchHabits() {
     return _isar.habits
-        .where()
+        .filter()
         .archivedEqualTo(false)
         .sortByCreatedAt()
         .watch(fireImmediately: true);
@@ -34,7 +34,7 @@ class HabitRepository {
   // Get habit count (for free user limit)
   Future<int> getHabitCount() async {
     return await _isar.habits
-        .where()
+        .filter()
         .archivedEqualTo(false)
         .count();
   }
@@ -82,7 +82,7 @@ class HabitRepository {
   // Delete habit (archive it)
   Future<void> deleteHabit(String habitId) async {
     final habit = await _isar.habits
-        .where()
+        .filter()
         .habitIdEqualTo(habitId)
         .findFirst();
     
@@ -102,7 +102,7 @@ class HabitRepository {
     final dateStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
     
     final existingLog = await _isar.habitLogs
-        .where()
+        .filter()
         .habitIdEqualTo(habitId)
         .and()
         .dateEqualTo(dateStr)
@@ -132,7 +132,7 @@ class HabitRepository {
     final dateStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
     
     final log = await _isar.habitLogs
-        .where()
+        .filter()
         .habitIdEqualTo(habitId)
         .and()
         .dateEqualTo(dateStr)
@@ -144,7 +144,7 @@ class HabitRepository {
   // Get habit streak
   Future<int> getHabitStreak(String habitId) async {
     final logs = await _isar.habitLogs
-        .where()
+        .filter()
         .habitIdEqualTo(habitId)
         .sortByDateDesc()
         .findAll();

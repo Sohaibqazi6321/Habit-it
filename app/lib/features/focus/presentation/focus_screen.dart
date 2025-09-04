@@ -1,33 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_it/features/focus/providers/focus_provider.dart';
+import 'package:habit_it/features/focus/presentation/widgets/timer_widget.dart';
+import 'package:habit_it/features/focus/presentation/widgets/session_history.dart';
 
-class FocusScreen extends StatelessWidget {
+class FocusScreen extends ConsumerWidget {
   const FocusScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todayFocusTime = ref.watch(todayFocusTimeProvider);
+    final todaySessionCount = ref.watch(todaySessionCountProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Focus'),
       ),
-      body: const Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.timer_outlined,
-              size: 64,
-              color: Colors.grey,
+            // Today's stats
+            Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          todayFocusTime.when(
+                            data: (seconds) {
+                              final minutes = seconds ~/ 60;
+                              return Text(
+                                '${minutes}m',
+                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                            loading: () => const CircularProgressIndicator(),
+                            error: (_, __) => const Text('--'),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Today',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          todaySessionCount.when(
+                            data: (count) => Text(
+                              '$count',
+                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            loading: () => const CircularProgressIndicator(),
+                            error: (_, __) => const Text('--'),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Sessions',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Text(
-              'Focus Timer',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Coming in Phase 2',
-              style: TextStyle(color: Colors.grey),
-            ),
+            
+            const SizedBox(height: 24),
+            
+            // Timer widget
+            const TimerWidget(),
+            
+            const SizedBox(height: 32),
+            
+            // Session history
+            const SessionHistory(),
           ],
         ),
       ),
